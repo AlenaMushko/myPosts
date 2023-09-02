@@ -6,11 +6,11 @@ import { Button, Card, CardContent, Grid, LinearProgress, Typography } from '@mu
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { CommentItem, MyPagination, MyTypography } from '@/components';
-import { usePostById} from '@/hooks';
+import { usePostById } from '@/hooks';
 import { ThemeContext } from '@/themes';
-import {IComment} from "@/interfaces";
-import {useQuery} from "react-query";
-import supabase from "@/config/superbaseClients";
+import { IComment } from '@/interfaces';
+import { useQuery } from 'react-query';
+import supabase from '@/config/superbaseClients';
 
 function CommentsP({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -25,36 +25,33 @@ function CommentsP({ params }: { params: { id: string } }) {
     isLoading: isCurrentCommentsLoading,
     refetch,
   } = useQuery<IComment[], Error>(
-      ['comments', params.id],
-      async (): Promise<IComment[]> => {
+    ['comments', params.id],
+    async (): Promise<IComment[]> => {
+      const startIndex = (currentPage - 1) * 4;
+      const { data, error, count } = await supabase
+        .from('comments')
+        .select('*', { count: 'exact' })
+        .eq('post_id', params.id)
+        .range(startIndex, startIndex + 3);
 
-        const startIndex = (currentPage - 1) * 4;
-          const { data, error, count } = await supabase
-              .from('comments')
-              .select('*', { count: 'exact' })
-              .eq('post_id', params.id)
-              .range(startIndex, startIndex + 3);
-
-
-          if (count) {
-          setTotalPages(Math.ceil(count / 4));
-        }
-        if (error) {
-          throw new Error(error.message);
-        }
-        return data ?? [];
-      },
-      {
-        onError: (error: Error) => {
-          throw new Error(error.message);
-        },
+      if (count) {
+        setTotalPages(Math.ceil(count / 4));
       }
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data ?? [];
+    },
+    {
+      onError: (error: Error) => {
+        throw new Error(error.message);
+      },
+    }
   );
 
   useEffect(() => {
     refetch();
   }, [currentPage]);
-
 
   const handleGoHome = () => {
     router.back();

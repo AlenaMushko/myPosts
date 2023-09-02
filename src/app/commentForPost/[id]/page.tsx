@@ -6,12 +6,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { ThemeContext } from '@/themes';
 import CommentForm from '@/components/CommentForm';
-import {
-  useCommentsById,
-  useUser,
-  usePostById,
-  useCommentCount,
-} from '@/hooks';
+import { useCommentsById, useUser, usePostById, useCommentCount } from '@/hooks';
 import { MyTypography } from '@/components';
 
 function CommentForPage({ params }: { params: { id: string } }) {

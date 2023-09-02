@@ -26,22 +26,16 @@ export const CommentItem: React.FC<IProps> = ({ item }) => {
         },
       }}
     >
-        <CardContent style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-                <MyTypography label={'Author'} value={author_name} />
-                <MyTypography label={'Creat data'} value={creatData} />
-                <MyTypography label={'Comments'} value={body} />
-            </div>
-            <div>
-                <ReactStars
-                    count={5}
-                    value={rating}
-                    size={18}
-                    color2={'#ffd700'}
-                />
-            </div>
-        </CardContent>
-
+      <CardContent style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>
+          <MyTypography label={'Author'} value={author_name} />
+          <MyTypography label={'Creat data'} value={creatData} />
+          <MyTypography label={'Comments'} value={body} />
+        </div>
+        <div>
+          <ReactStars count={5} value={rating} size={18} color2={'#ffd700'} />
+        </div>
+      </CardContent>
     </Card>
   );
 };
