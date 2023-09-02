@@ -1,12 +1,17 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent } from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { ThemeContext } from '@/themes';
 import CommentForm from '@/components/CommentForm';
-import { useCommentsForPostWithoutPagination, useUser, usePostById } from '@/hooks';
+import {
+  useCommentsForPostWithoutPagination,
+  useUser,
+  usePostById,
+  useCommentCount,
+} from '@/hooks';
 import { MyTypography } from '@/components';
 
 function CommentForPage({ params }: { params: { id: string } }) {
@@ -16,12 +21,8 @@ function CommentForPage({ params }: { params: { id: string } }) {
   const { data: user } = useUser();
   const { data: post } = usePostById(params.id);
   const { data: comments, refetch } = useCommentsForPostWithoutPagination(params.id);
-  const [commentCount, setCommentCount] = useState(0);
-  useEffect(() => {
-    if (comments) {
-      setCommentCount(comments.length);
-    }
-  }, [comments]);
+  const commentCount = useCommentCount(comments);
+
   const handleGoHome = () => {
     router.back();
   };

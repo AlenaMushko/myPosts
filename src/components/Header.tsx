@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -17,10 +16,14 @@ export const Header: React.FC = () => {
   const { theme } = useContext(ThemeContext);
 
   const handleLogout = async () => {
-    window.sessionStorage.removeItem('userId');
-    await supabase.auth.signOut();
-    router.push('/login');
-    refetch();
+    try {
+      window.sessionStorage.removeItem('userId');
+      await supabase.auth.signOut();
+      await router.push('/login');
+      refetch();
+    } catch (error) {
+      console.error('An error occurred during logout:', error);
+    }
   };
 
   return (

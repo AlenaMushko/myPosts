@@ -2,18 +2,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Container } from '@mui/system';
-import {
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  LinearProgress,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { CommentItem, MyPagination, MyTypography } from '@/components';
-import { useCommentsForPost, usePostById } from '@/hooks';
+import { useCommentCount, useCommentsForPost, usePostById } from '@/hooks';
 import { ThemeContext } from '@/themes';
 
 function CommentsP({ params }: { params: { id: string } }) {
@@ -34,18 +27,12 @@ function CommentsP({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (comments) {
-      setCommentCount(comments.length);
       setTotalPages(Math.ceil(comments.length / 4));
     }
   }, [comments]);
   const { data: post } = usePostById(params.id);
 
-  const [commentCount, setCommentCount] = useState(0);
-  useEffect(() => {
-    if (comments) {
-      setCommentCount(comments.length);
-    }
-  }, [comments]);
+  const commentCount = useCommentCount(comments);
   const handleGoHome = () => {
     router.back();
   };

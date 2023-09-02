@@ -15,28 +15,31 @@ import { IUser } from '@/interfaces';
 import { MyContainer } from '@/components';
 
 const loginUser = async (user: IUser) => {
-  const { data: userData, error: userError } = await supabase
-    .from('users')
-    .select('id, password')
-    .eq('name', user.name);
+  try {
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id, password')
+      .eq('name', user.name);
 
-  if (userError) {
-    throw userError;
-  }
+    if (userError) {
+      throw userError;
+    }
 
-  if (!userData || userData.length === 0) {
-    throw new Error('User not found');
-    return;
-  }
+    if (!userData || userData.length === 0) {
+      throw new Error('User not found');
+    }
 
-  if (userData[0].password.trim() === user.password.trim()) {
-    console.log('User authenticated');
-    return {
-      ...userData[0],
-      id: userData[0].id,
-    };
-  } else {
-    throw new Error('Incorrect password or name');
+    if (userData[0].password.trim() === user.password.trim()) {
+      console.log('User authenticated');
+      return {
+        ...userData[0],
+        id: userData[0].id,
+      };
+    } else {
+      throw new Error('Incorrect password or name');
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 

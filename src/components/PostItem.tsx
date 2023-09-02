@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Button, Card, CardContent, Grid } from '@mui/material';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useRouter } from 'next/navigation';
 
 import { IPost, IUser } from '@/interfaces';
-import { useCommentsForPostWithoutPagination } from '@/hooks';
+import { useCommentCount, useCommentsForPostWithoutPagination } from '@/hooks';
 import { formatDate } from '@/helpers';
 import { MyTypography } from '@/components/MyTypography';
 
@@ -22,12 +22,8 @@ export const PostItem: React.FC<IProps> = ({ item, user }) => {
   const { data: comments } = useCommentsForPostWithoutPagination(id?.toString() || '');
   const creatData = formatDate(new Date(created_at));
 
-  const [commentCount, setCommentCount] = useState(0);
-  useEffect(() => {
-    if (comments) {
-      setCommentCount(comments.length);
-    }
-  }, [comments]);
+  const commentCount = useCommentCount(comments);
+
   const addComment = () => {
     router.push(`/commentForPost/${id}`);
   };

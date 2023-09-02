@@ -16,26 +16,36 @@ const AuthorP = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const {
-    data: carrentPosts,
+    data: currentPosts,
     isLoading: isPostsLoading,
     refetch,
-  } = useQuery<IPost[]>(['posts', user?.id], async () => {
-    if (!user || !user.id) {
-      return [];
-    }
-    const startIndex = (currentPage - 1) * 4;
-    const { data, error, count } = await supabase
-      .from('posts')
-      .select('*', { count: 'exact' })
-      .eq('author_id', user?.id)
-      .range(startIndex, startIndex + 3);
+  } = useQuery<IPost[], Error>(
+    ['posts', user?.id],
+    async (): Promise<IPost[]> => {
+      if (!user || !user.id) {
+        return [];
+      }
+      const startIndex = (currentPage - 1) * 4;
+      const { data, error, count } = await supabase
+        .from('posts')
+        .select('*', { count: 'exact' })
+        .eq('author_id', user?.id)
+        .range(startIndex, startIndex + 3);
 
-    if (error) throw new Error(error.message);
-    if (count) {
-      setTotalPages(Math.ceil(count / 4));
+      if (count) {
+        setTotalPages(Math.ceil(count / 4));
+      }
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data ?? [];
+    },
+    {
+      onError: (error: Error) => {
+        throw new Error(error.message);
+      },
     }
-    return data;
-  });
+  );
 
   useEffect(() => {
     refetch();
@@ -53,7 +63,7 @@ const AuthorP = () => {
             spacing={2}
             sx={{ width: '100%', marginTop: '24px', display: 'flex', alignItems: 'stretch' }}
           >
-            {carrentPosts?.map(post => (
+            {currentPosts?.map(post => (
               <Grid item xs={6} key={post.id} sx={{ display: 'flex' }}>
                 <PostItem item={post} user={user} />
               </Grid>

@@ -14,12 +14,16 @@ import { SignupValidators } from '@/validators';
 import { MyContainer } from '@/components';
 
 const signupUser = async (user: IUser) => {
-  const { data, error } = await supabase.from('users').insert([user]);
+  try {
+    const { data, error } = await supabase.from('users').insert([user]);
 
-  if (error) {
-    throw error;
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
   }
-  return data;
 };
 const SignupP = () => {
   const {

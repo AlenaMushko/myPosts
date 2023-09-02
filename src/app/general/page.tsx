@@ -18,18 +18,26 @@ const GeneralP = () => {
     data: allPosts,
     isLoading: isPostsLoading,
     refetch,
-  } = useQuery<IPost[]>('posts', async () => {
-    const startIndex = (currentPage - 1) * 4;
-    const { data, error, count } = await supabase
-      .from('posts')
-      .select('*', { count: 'exact' })
-      .range(startIndex, startIndex + 3);
-    if (error) throw new Error(error.message);
-    if (count) {
-      setTotalPages(Math.ceil(count / 4));
+  } = useQuery<IPost[], Error>(
+    'posts',
+    async () => {
+      const startIndex = (currentPage - 1) * 4;
+      const { data, error, count } = await supabase
+        .from('posts')
+        .select('*', { count: 'exact' })
+        .range(startIndex, startIndex + 3);
+      if (error) throw new Error(error.message);
+      if (count) {
+        setTotalPages(Math.ceil(count / 4));
+      }
+      return data;
+    },
+    {
+      onError: (error: Error) => {
+        throw new Error(error.message);
+      },
     }
-    return data;
-  });
+  );
 
   useEffect(() => {
     refetch();

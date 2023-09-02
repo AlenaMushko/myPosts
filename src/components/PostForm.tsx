@@ -32,20 +32,27 @@ export const PostForm: React.FC<IProps> = ({ userId, refetch }) => {
 
   const { data: user } = useUser();
 
-  const addPostMutation = useMutation(async (post: IPost) => {
-    const newPost = {
-      ...post,
-      author_id: userId,
-      author_name: user?.name,
-    };
+  const addPostMutation = useMutation(
+    async (post: IPost) => {
+      const newPost = {
+        ...post,
+        author_id: userId,
+        author_name: user?.name,
+      };
 
-    const { data, error } = await supabase.from('posts').insert([newPost]);
+      const { data, error } = await supabase.from('posts').insert([newPost]);
 
-    if (error) {
-      throw new Error(error.message);
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    },
+    {
+      onError: error => {
+        console.log('addPostMutation err', error);
+      },
     }
-    return data;
-  });
+  );
 
   const addPost: SubmitHandler<IPost> = async post => {
     try {
