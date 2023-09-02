@@ -7,7 +7,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ThemeContext } from '@/themes';
 import CommentForm from '@/components/CommentForm';
 import {
-  useCommentsForPostWithoutPagination,
+  useCommentsById,
   useUser,
   usePostById,
   useCommentCount,
@@ -20,7 +20,7 @@ function CommentForPage({ params }: { params: { id: string } }) {
 
   const { data: user } = useUser();
   const { data: post } = usePostById(params.id);
-  const { data: comments, refetch } = useCommentsForPostWithoutPagination(params.id);
+  const { data: comments, refetch } = useCommentsById(params.id);
   const commentCount = useCommentCount(comments);
 
   const handleGoHome = () => {

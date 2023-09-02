@@ -6,8 +6,11 @@ import { Button, Card, CardContent, Grid, LinearProgress, Typography } from '@mu
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { CommentItem, MyPagination, MyTypography } from '@/components';
-import { useCommentCount, useCommentsForPost, usePostById } from '@/hooks';
+import { usePostById} from '@/hooks';
 import { ThemeContext } from '@/themes';
+import {IComment} from "@/interfaces";
+import {useQuery} from "react-query";
+import supabase from "@/config/superbaseClients";
 
 function CommentsP({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -15,24 +18,44 @@ function CommentsP({ params }: { params: { id: string } }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const { data: post } = usePostById(params.id);
+
   const {
-    data: comments,
-    isLoading: isCommentsLoading,
+    data: currentComments,
+    isLoading: isCurrentCommentsLoading,
     refetch,
-  } = useCommentsForPost(params.id, currentPage);
+  } = useQuery<IComment[], Error>(
+      ['comments', params.id],
+      async (): Promise<IComment[]> => {
+
+        const startIndex = (currentPage - 1) * 4;
+          const { data, error, count } = await supabase
+              .from('comments')
+              .select('*', { count: 'exact' })
+              .eq('post_id', params.id)
+              .range(startIndex, startIndex + 3);
+
+
+          if (count) {
+          setTotalPages(Math.ceil(count / 4));
+        }
+        if (error) {
+          throw new Error(error.message);
+        }
+        return data ?? [];
+      },
+      {
+        onError: (error: Error) => {
+          throw new Error(error.message);
+        },
+      }
+  );
 
   useEffect(() => {
     refetch();
   }, [currentPage]);
 
-  useEffect(() => {
-    if (comments) {
-      setTotalPages(Math.ceil(comments.length / 4));
-    }
-  }, [comments]);
-  const { data: post } = usePostById(params.id);
 
-  const commentCount = useCommentCount(comments);
   const handleGoHome = () => {
     router.back();
   };
@@ -42,7 +65,7 @@ function CommentsP({ params }: { params: { id: string } }) {
       <Button variant="contained" startIcon={<ExitToAppIcon />} onClick={handleGoHome}>
         Go back
       </Button>
-      {isCommentsLoading && <LinearProgress color="success" />}
+      {isCurrentCommentsLoading && <LinearProgress color="success" />}
       {post && (
         <Card
           sx={{
@@ -57,14 +80,13 @@ function CommentsP({ params }: { params: { id: string } }) {
               <MyTypography label={'Title'} value={post?.title} />
               <MyTypography label={'Author'} value={post?.author_name} />
               <MyTypography label={'Body'} value={post?.body} />
-              <MyTypography label={'Comments'} value={commentCount} />
             </Grid>
           </CardContent>
         </Card>
       )}
-      {comments?.length !== 0 ? (
+      {currentComments?.length !== 0 ? (
         <>
-          {comments?.map(comment => <CommentItem item={comment} key={comment.id} />)}
+          {currentComments?.map(comment => <CommentItem item={comment} key={comment.id} />)}
 
           <MyPagination
             currentPage={currentPage}

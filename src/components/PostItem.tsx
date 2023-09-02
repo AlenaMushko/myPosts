@@ -5,7 +5,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useRouter } from 'next/navigation';
 
 import { IPost, IUser } from '@/interfaces';
-import { useCommentCount, useCommentsForPostWithoutPagination } from '@/hooks';
+import { useCommentCount, useCommentsById } from '@/hooks';
 import { formatDate } from '@/helpers';
 import { MyTypography } from '@/components/MyTypography';
 
@@ -19,7 +19,7 @@ export const PostItem: React.FC<IProps> = ({ item, user }) => {
   const { type } = user;
   const router = useRouter();
 
-  const { data: comments } = useCommentsForPostWithoutPagination(id?.toString() || '');
+  const { data: comments } = useCommentsById(id?.toString() || '');
   const creatData = formatDate(new Date(created_at));
 
   const commentCount = useCommentCount(comments);
