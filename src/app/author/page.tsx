@@ -5,10 +5,10 @@ import { Container } from '@mui/system';
 import { Grid, LinearProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+
 import { IPost } from '@/interfaces';
 import supabase from '@/config/superbaseClients';
-import PostForm from '@/components/PostForm';
-import { MyPagination, PostItem } from '@/components';
+import { MyPagination, PostItem, PostForm } from '@/components';
 
 const AuthorP = () => {
   const { data: user } = useUser();
@@ -23,16 +23,16 @@ const AuthorP = () => {
     if (!user || !user.id) {
       return [];
     }
-    const startIndex = (currentPage - 1) * 3;
+    const startIndex = (currentPage - 1) * 4;
     const { data, error, count } = await supabase
       .from('posts')
       .select('*', { count: 'exact' })
       .eq('author_id', user?.id)
-      .range(startIndex, startIndex + 2);
+      .range(startIndex, startIndex + 3);
 
     if (error) throw new Error(error.message);
     if (count) {
-      setTotalPages(Math.ceil(count / 3));
+      setTotalPages(Math.ceil(count / 4));
     }
     return data;
   });

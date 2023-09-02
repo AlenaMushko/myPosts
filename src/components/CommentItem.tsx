@@ -1,7 +1,9 @@
 import React from 'react';
-import { Card, Typography } from '@mui/material';
+import { Card, CardContent, Grid } from '@mui/material';
+
 import { IComment } from '@/interfaces';
 import { formatDate } from '@/helpers';
+import { MyTypography } from '@/components/MyTypography';
 
 interface IProps {
   item: IComment;
@@ -23,20 +25,13 @@ export const CommentItem: React.FC<IProps> = ({ item }) => {
         },
       }}
     >
-      <Typography component="div" variant="body2" color="text.primary">
-        <span style={{ fontWeight: 'bold' }}>Title: </span>
-        <span style={{ fontFamily: 'Arial, sans-serif' }}>{author_name}</span>
-        <br />
-      </Typography>
-      <Typography component="div" variant="body2" color="text.primary">
-        <span style={{ fontWeight: 'bold' }}>Creat data: </span>
-        <span style={{ fontFamily: 'Arial, sans-serif' }}>{creatData}</span>
-        <br />
-      </Typography>
-      <Typography component="div" variant="body2" color="text.primary">
-        <span style={{ fontWeight: 'bold' }}>Comment: </span>
-        <span style={{ fontFamily: 'Arial, sans-serif' }}>{body}</span>
-      </Typography>
+      <CardContent>
+        <Grid container spacing={1}>
+          <MyTypography label={'Author'} value={author_name} />
+          <MyTypography label={'Creat data'} value={creatData} />
+          <MyTypography label={'Comments'} value={body} />
+        </Grid>
+      </CardContent>
     </Card>
   );
 };

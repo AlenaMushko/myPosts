@@ -1,5 +1,4 @@
 'use client';
-
 import { ThemeProvider } from '@mui/material/styles';
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 

@@ -1,6 +1,6 @@
 'use client';
 import React, { ChangeEvent } from 'react';
-import { Box, Button, FormControl, MenuItem, TextareaAutosize, TextField } from '@mui/material';
+import {  Button, FormControl, MenuItem, TextareaAutosize, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IComment } from '@/interfaces';
@@ -10,6 +10,7 @@ import { styled } from '@mui/system';
 import { useMutation } from 'react-query';
 import { CommentValidators } from '@/validators/CommentValidators';
 import { useRouter } from 'next/navigation';
+import { MyContainer } from '@/components/MyContainer';
 
 const StyledTextarea = styled(TextareaAutosize)(` padding: 8px;`);
 
@@ -77,16 +78,7 @@ const CommentForm: React.FC<IProps> = ({ user_name, post_id, refetch }) => {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100vw',
-        mt: 7,
-        gap: 5,
-      }}
-    >
+    <MyContainer>
       <FormControl
         component="form"
         onSubmit={handleSubmit(addComment)}
@@ -124,7 +116,7 @@ const CommentForm: React.FC<IProps> = ({ user_name, post_id, refetch }) => {
           Add Comment
         </Button>
       </FormControl>
-    </Box>
+    </MyContainer>
   );
 };
 

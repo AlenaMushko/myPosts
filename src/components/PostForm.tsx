@@ -3,12 +3,14 @@ import React from 'react';
 import { Box, Button, FormControl, TextareaAutosize, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IPost } from '@/interfaces';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { PostValidators } from '@/validators';
-import supabase from '@/config/superbaseClients';
 import { styled } from '@mui/system';
 import { useMutation } from 'react-query';
+
+import { IPost } from '@/interfaces';
+import { PostValidators } from '@/validators';
+import supabase from '@/config/superbaseClients';
+import { useUser } from '@/hooks';
 
 const StyledTextarea = styled(TextareaAutosize)(` padding: 8px;`);
 
@@ -17,7 +19,7 @@ interface IProps {
   refetch: Function;
 }
 
-const PostForm: React.FC<IProps> = ({ userId, refetch }) => {
+export const PostForm: React.FC<IProps> = ({ userId, refetch }) => {
   const {
     register,
     reset,
@@ -28,24 +30,22 @@ const PostForm: React.FC<IProps> = ({ userId, refetch }) => {
     resolver: joiResolver(PostValidators),
   });
 
-  const addPostMutation = useMutation(
-    async (post: IPost) => {
-      const newPost = {
-        ...post,
-        author_id: userId,
-      };
+  const { data: user } = useUser();
 
-      const { data, error } = await supabase.from('posts').insert([newPost]);
+  const addPostMutation = useMutation(async (post: IPost) => {
+    const newPost = {
+      ...post,
+      author_id: userId,
+      author_name: user?.name,
+    };
 
-      if (error) {
-        throw new Error(error.message);
-      }
-      return data;
-    },
-    {
-      //  onMutate, onError, onSuccess
+    const { data, error } = await supabase.from('posts').insert([newPost]);
+
+    if (error) {
+      throw new Error(error.message);
     }
-  );
+    return data;
+  });
 
   const addPost: SubmitHandler<IPost> = async post => {
     try {
@@ -63,7 +63,7 @@ const PostForm: React.FC<IProps> = ({ userId, refetch }) => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100vw',
+        width: '90%',
         mt: 7,
         gap: 5,
       }}
@@ -96,5 +96,3 @@ const PostForm: React.FC<IProps> = ({ userId, refetch }) => {
     </Box>
   );
 };
-
-export default PostForm;

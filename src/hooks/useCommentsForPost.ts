@@ -1,16 +1,6 @@
 import { useQuery } from 'react-query';
 import supabase from '@/config/superbaseClients';
 
-// const fetchComments = async (postId: string) => {
-//     const { data, error } = await supabase
-//         .from('comments')
-//         .select('*')
-//         .eq('post_id', postId);
-//
-//     if (error) throw error;
-//     return data;
-// };
-
 export const useCommentsForPost = (postId: string, currentPage: number) => {
   return useQuery(
     ['comments', postId, currentPage],

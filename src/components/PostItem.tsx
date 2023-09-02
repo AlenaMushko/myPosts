@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { IPost, IUser } from '@/interfaces';
-import { Button, Card, CardContent, Grid, ListItemText, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Grid } from '@mui/material';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useRouter } from 'next/navigation';
+
+import { IPost, IUser } from '@/interfaces';
 import { useCommentsForPostWithoutPagination } from '@/hooks';
 import { formatDate } from '@/helpers';
+import { MyTypography } from '@/components/MyTypography';
 
 interface IProps {
   item: IPost;
@@ -38,7 +40,7 @@ export const PostItem: React.FC<IProps> = ({ item, user }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        flex: '1 1 auto', // <-- Важливо
+        flex: '1 1 auto',
         padding: '12px',
         transition: 'box-shadow 0.3s ease-in-out',
         boxShadow: '2px 0px 26px 0px #056f5d',
@@ -48,96 +50,43 @@ export const PostItem: React.FC<IProps> = ({ item, user }) => {
       }}
     >
       <CardContent>
-        <ListItemText primary={` Title: ${title}`} />
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Typography
-              component="div"
-              sx={{ display: 'inline', fontWeight: 'bold' }}
-              variant="body2"
-              color="text.primary"
-            >
-              Authot:
-            </Typography>
-            <Typography
-              component="div"
-              sx={{ display: 'inline' }}
-              variant="body2"
-              color="text.primary"
-            >
-              {author_name}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography
-              component="div"
-              sx={{ display: 'inline', fontWeight: 'bold' }}
-              variant="body2"
-              color="text.primary"
-            >
-              Creat data:
-            </Typography>
-            <Typography
-              component="div"
-              sx={{ display: 'inline' }}
-              variant="body2"
-              color="text.primary"
-            >
-              {creatData}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography
-              component="div"
-              sx={{ display: 'inline', fontWeight: 'bold' }}
-              variant="body2"
-              color="text.primary"
-            >
-              Body:
-            </Typography>
-            <Typography
-              component="div"
-              sx={{ display: 'inline' }}
-              variant="body2"
-              color="text.primary"
-            >
-              {body}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography
-              component="div"
-              sx={{ display: 'inline', fontWeight: 'bold' }}
-              variant="body2"
-              color="text.primary"
-            >
-              Comments:
-            </Typography>
-            <Typography
-              component="div"
-              sx={{ display: 'inline' }}
-              variant="body2"
-              color="text.primary"
-            >
-              {commentCount}
-            </Typography>
-            <Button
-              sx={{ marginLeft: '2vw' }}
-              variant="contained"
-              startIcon={<ReceiptLongIcon />}
-              onClick={handleOpenComments}
-            >
-              Comments
-            </Button>
-          </Grid>
+        <Grid>
+          <MyTypography label={'Title'} value={title} />
+          <MyTypography label={'Author'} value={author_name} />
+          <MyTypography label={'Creat data'} value={creatData} />
+          <MyTypography label={'Body'} value={body} />
+          <MyTypography label={'Comments'} value={commentCount} />
         </Grid>
       </CardContent>
 
-      {type === 'commentator' && (
-        <Button variant="contained" startIcon={<LibraryAddIcon />} onClick={addComment}>
-          Add Comment
+      <Box sx={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '2vh' }}>
+        <Button
+          sx={{
+            '& .MuiButton-startIcon': {
+              display: { xs: 'none', sm: 'inline' },
+            },
+          }}
+          variant="contained"
+          startIcon={<ReceiptLongIcon />}
+          onClick={handleOpenComments}
+        >
+          All comments
         </Button>
-      )}
+        {type === 'commentator' && (
+          <Button
+            sx={{
+              '& .MuiButton-startIcon': {
+                display: { xs: 'none', sm: 'inline' },
+              },
+            }}
+            variant="contained"
+            startIcon={<LibraryAddIcon />}
+            onClick={addComment}
+          >
+            Add Comment
+          </Button>
+        )}
+      </Box>
     </Card>
   );
 };

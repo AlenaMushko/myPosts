@@ -26,74 +26,78 @@ export const Header: React.FC = () => {
   return (
     <AppBar position="fixed">
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <ImageListItem>
-          <img
-            src="/assets/logo.png"
-            alt="Logo"
-            loading="lazy"
-            style={{ width: '40px', height: '40px' }}
-          />
-        </ImageListItem>
-        {user ? (
-          <>
-            <Link underline="none" href={AppRoutes.AUTHOR}>
-              <Typography
-                variant="body2"
-                sx={{
-                  borderRadius: '8px',
-                  padding: '8px',
-                  border: pathname === AppRoutes.AUTHOR ? '1px solid #f5f5f5' : '',
-                }}
-              >
-                Author
-              </Typography>
-            </Link>
-            <Link underline="none" href={AppRoutes.GENERAL}>
-              <Typography
-                variant="body2"
-                sx={{
-                  borderRadius: '8px',
-                  padding: '8px',
-                  border: pathname === AppRoutes.GENERAL ? '1px solid #f5f5f5' : '',
-                }}
-              >
-                General
-              </Typography>
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link underline="none" href={AppRoutes.LOGIN}>
-              <Typography
-                variant="body2"
-                sx={{
-                  borderRadius: '8px',
-                  padding: '8px',
-                  border: pathname === AppRoutes.LOGIN ? '1px solid #f5f5f5' : '',
-                }}
-              >
-                Login
-              </Typography>
-            </Link>
-            <Link underline="none" href={AppRoutes.SIGNUP}>
-              <Typography
-                variant="body2"
-                sx={{
-                  borderRadius: '8px',
-                  padding: '8px',
-                  border: pathname === AppRoutes.SIGNUP ? '1px solid #f5f5f5' : '',
-                }}
-              >
-                Signup
-              </Typography>
-            </Link>
-          </>
-        )}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <ImageListItem>
+            <img
+              src="/assets/logo.png"
+              alt="Logo"
+              loading="lazy"
+              style={{ width: '40px', height: '40px' }}
+            />
+          </ImageListItem>
+          <Box sx={{ marginLeft: '2vw', display: 'flex', gap: '2vw' }}>
+            {user ? (
+              <>
+                <Link underline="none" href={AppRoutes.AUTHOR}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      borderRadius: '8px',
+                      padding: '8px',
+                      border: pathname === AppRoutes.AUTHOR ? '1px solid #f5f5f5' : '',
+                    }}
+                  >
+                    Author
+                  </Typography>
+                </Link>
+                <Link underline="none" href={AppRoutes.GENERAL}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      borderRadius: '8px',
+                      padding: '8px',
+                      border: pathname === AppRoutes.GENERAL ? '1px solid #f5f5f5' : '',
+                    }}
+                  >
+                    General
+                  </Typography>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link underline="none" href={AppRoutes.LOGIN}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      borderRadius: '8px',
+                      padding: '8px',
+                      border: pathname === AppRoutes.LOGIN ? '1px solid #f5f5f5' : '',
+                    }}
+                  >
+                    Login
+                  </Typography>
+                </Link>
+                <Link underline="none" href={AppRoutes.SIGNUP}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      borderRadius: '8px',
+                      padding: '8px',
+                      border: pathname === AppRoutes.SIGNUP ? '1px solid #f5f5f5' : '',
+                    }}
+                  >
+                    Signup
+                  </Typography>
+                </Link>
+              </>
+            )}
+          </Box>
+        </Box>
+
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           {user && (
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'baseline' }}>
               <Typography sx={{ color: theme.palette.info.main }}>{user.name}</Typography>
-
               <Button
                 onClick={handleLogout}
                 size="small"

@@ -39,7 +39,6 @@ const lightTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          marginLeft: '2vw',
           background: ' #056f5d',
           transition: 'background 0.5s ease',
           '&:hover': {

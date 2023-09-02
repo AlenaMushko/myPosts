@@ -21,5 +21,8 @@ export const SignupValidators = Joi.object({
         'Password must have at least one uppercase letter, one lowercase letter, one digit, and be between 7 to 20 characters long',
       'string.required': 'Password is required',
     }),
-  type: Joi.string().valid('author', 'commentator').required(),
+  type: Joi.string().valid('author', 'commentator').required().messages({
+    'string.valid': 'Type must be either author or commentator',
+    'string.required': 'Type is required',
+  }),
 });

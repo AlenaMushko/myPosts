@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Box, FormControl, TextField, Button, Alert } from '@mui/material';
+import { FormControl, TextField, Button, Alert } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ import { ILogin } from '@/interfaces';
 import { LoginValidators } from '@/validators';
 import supabase from '@/config/superbaseClients';
 import { IUser } from '@/interfaces';
-import { Container } from '@mui/system';
+import { MyContainer } from '@/components';
 
 const loginUser = async (user: IUser) => {
   const { data: userData, error: userError } = await supabase
@@ -64,12 +64,12 @@ const LoginP = () => {
         },
         60 * 60 * 1000
       );
-      // setIsLoggedIn?.(true);
+
       router.push('/author');
       setAlertMessage(null);
       reset();
     },
-    onError: (error: any) => {
+    onError: () => {
       setAlertMessage('Incorrect password or name');
     },
   });
@@ -78,55 +78,44 @@ const LoginP = () => {
   };
 
   return (
-    <Container>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: '100vw',
-          mt: 7,
-          gap: 5,
-        }}
+    <MyContainer>
+      {mutation.isLoading && <LinearProgress color="success" />}
+      {alertMessage && (
+        <Alert variant="filled" severity="info">
+          {alertMessage}
+        </Alert>
+      )}
+      <FormControl
+        component="form"
+        onSubmit={handleSubmit(handleLogin)}
+        sx={{ width: '70%', gap: 3 }}
       >
-        {mutation.isLoading && <LinearProgress color="success" />}
-        {alertMessage && (
-          <Alert variant="filled" severity="info">
-            {alertMessage}
-          </Alert>
-        )}
-        <FormControl
-          component="form"
-          onSubmit={handleSubmit(handleLogin)}
-          sx={{ width: '70%', gap: 3 }}
-        >
-          <TextField
-            label="Name"
-            variant="outlined"
-            {...register('name')}
-            error={!!errors.name}
-            helperText={errors.name?.message as string}
-          />
-          <TextField
-            label="Password"
-            variant="outlined"
-            {...register('password')}
-            error={!!errors.password}
-            helperText={errors.password?.message as string}
-          />
+        <TextField
+          label="Name"
+          variant="outlined"
+          {...register('name')}
+          error={!!errors.name}
+          helperText={errors.name?.message as string}
+        />
+        <TextField
+          label="Password"
+          variant="outlined"
+          {...register('password')}
+          error={!!errors.password}
+          helperText={errors.password?.message as string}
+        />
 
-          <Button
-            type="submit"
-            variant="contained"
-            endIcon={<SendIcon />}
-            sx={{ padding: '12px' }}
-            disabled={!isValid}
-          >
-            Login
-          </Button>
-        </FormControl>
-      </Box>
-    </Container>
+        <Button
+          type="submit"
+          variant="contained"
+          endIcon={<SendIcon />}
+          sx={{ padding: '12px' }}
+          disabled={!isValid}
+        >
+          Login
+        </Button>
+      </FormControl>
+    </MyContainer>
   );
 };
 

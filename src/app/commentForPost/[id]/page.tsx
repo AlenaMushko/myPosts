@@ -1,12 +1,13 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import CommentForm from '@/components/CommentForm';
 import { useRouter } from 'next/navigation';
-import { useCommentsForPostWithoutPagination, useUser } from '@/hooks';
-import { Button, Card, CardContent, Grid, ListItemText, Typography } from '@mui/material';
+import { Button, Card, CardContent } from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { usePostById } from '@/hooks/usePostById';
+
 import { ThemeContext } from '@/themes';
+import CommentForm from '@/components/CommentForm';
+import { useCommentsForPostWithoutPagination, useUser, usePostById } from '@/hooks';
+import { MyTypography } from '@/components';
 
 function CommentForPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -41,63 +42,10 @@ function CommentForPage({ params }: { params: { id: string } }) {
           }}
         >
           <CardContent>
-            <ListItemText primary={` Title: ${post?.title}`} />
-            <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <Typography
-                  component="div"
-                  sx={{ display: 'inline', fontWeight: 'bold' }}
-                  variant="body2"
-                  color="text.primary"
-                >
-                  Authot:
-                </Typography>
-                <Typography
-                  component="div"
-                  sx={{ display: 'inline' }}
-                  variant="body2"
-                  color="text.primary"
-                >
-                  {post?.author_name}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  component="div"
-                  sx={{ display: 'inline', fontWeight: 'bold' }}
-                  variant="body2"
-                  color="text.primary"
-                >
-                  Body:
-                </Typography>
-                <Typography
-                  component="div"
-                  sx={{ display: 'inline' }}
-                  variant="body2"
-                  color="text.primary"
-                >
-                  {post?.body}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  component="div"
-                  sx={{ display: 'inline', fontWeight: 'bold' }}
-                  variant="body2"
-                  color="text.primary"
-                >
-                  Comments:
-                </Typography>
-                <Typography
-                  component="div"
-                  sx={{ display: 'inline' }}
-                  variant="body2"
-                  color="text.primary"
-                >
-                  {commentCount}
-                </Typography>
-              </Grid>
-            </Grid>
+            <MyTypography label={'Title'} value={post?.title} />
+            <MyTypography label={'Author'} value={post?.author_name} />
+            <MyTypography label={'Body'} value={post?.body} />
+            <MyTypography label={'Comments'} value={commentCount} />
           </CardContent>
         </Card>
       )}
